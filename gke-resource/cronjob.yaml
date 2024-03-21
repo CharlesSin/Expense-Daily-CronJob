@@ -17,7 +17,7 @@ spec:
         spec:
           containers:
           - name: cronjob-test
-            image: eugeneyiew128/gke-practice:dev_2024031912
+            image: eugeneyiew128/daily-backup-cronjob:dev_2024031912
             imagePullPolicy: Always
             resources:
               limits: 
@@ -27,3 +27,5 @@ spec:
                 cpu: "50m"
                 memory: "50Mi"
           restartPolicy: Never
+          serviceAccount: logging-ksa
+          serviceAccountName: logging-ksa
