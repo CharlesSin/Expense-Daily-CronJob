@@ -1,0 +1,41 @@
+# env => 部屬的環境(必填)，可填值 dev test staging prod
+# type => 部屬的類型(必填)，可填值 api job frontend
+# dept => 部門的單位(必填)，可填值 platform outside interface gt1
+# product => 服務名稱(必填)，例如: bbchat schedule
+# repo => 部屬服務的 repo 名稱(必填)，例如: imctl_api, imctl_web
+labels:
+  env: dev
+  type: cronjob
+  dept: personal
+  product: schedule
+  repo: daily-backup
+
+# namespace 預設 default
+namespace: gke-test-f2e # service namespace
+# serviceAccountName 預設 default
+serviceAccountName: logging-ksa
+# 服務的名稱(必填)
+name: daily-backup # service name. ex: <部門>-<組別>-<服務名稱>-<服務代號>
+
+# Declare variables to be passed into your templates.
+job:
+  # first cron
+  image:
+    repository: eugeneyiew128/daily-backup-cronjob:dev_2024032112
+    imagePullPolicy: Always
+  namespace: gke-test-f2e
+  schedule: "* * * * *"
+  failedJobsHistoryLimit: 3
+  successfulJobsHistoryLimit: 3
+  concurrencyPolicy: Allow
+  restartPolicy: Never
+
+# configmap list，下面有範例
+configmap:
+  - name: configmap-name
+    data:
+      conf: |
+        設定檔內容寫這邊
+
+serviceAccount:
+  create: false

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: daily-backup-cronjob
+  namespace: gke-test-f2e
+spec:
+  schedule: "*/30 * * * *" # run every 30 minute
+  concurrencyPolicy: Allow
+  startingDeadlineSeconds: 100
+  suspend: false
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          containers:
+          - name: cronjob-test
+            image: eugeneyiew128/daily-backup-cronjob:dev_2024031912
+            imagePullPolicy: Always
+            resources:
+              limits: 
+                cpu: "50m"
+                memory: "50Mi"
+              requests: 
+                cpu: "50m"
+                memory: "50Mi"
+          restartPolicy: Never
+          serviceAccountName: logging-ksa
