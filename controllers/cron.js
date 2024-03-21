@@ -23,7 +23,7 @@ const logger = winston.createLogger({
 });
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient("mongodb+srv://cronjob-4-mongodb:cronjob-4-mongodb@cluster0.pooey.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+const client = new MongoClient(process.env.MONGODB_URL, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
