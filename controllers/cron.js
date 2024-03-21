@@ -4,6 +4,7 @@ import getNow from "../utils/getNow.js";
 import customLogsInfo from "./logging.js";
 import client from "../config/mongoDBConnect.js";
 import backupAccountData from "../utils/backupAccountData.js";
+import fireConfig from "../config/firebaseConnect.config";
 
 import twentyOne from "../mock/2021.json" assert { type: "json" };
 import twentyTwo from "../mock/2022.json" assert { type: "json" };
@@ -21,12 +22,18 @@ async function run() {
     // Database Name
     const dbName = "DailyBackup";
     const db = client.db(dbName);
-
+    const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
 
     const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
     const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
+
+    const firestoreDb = fireConfig.firestore();
+    await firestoreDb
+      .collection("demo")
+      .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
+      .set({ DATE: nowString, TOTAL: arraydata.length });
 
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo(`FinalData.length: ${finalData.length}`);
