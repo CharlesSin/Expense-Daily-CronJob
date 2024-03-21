@@ -1,21 +1,13 @@
 import "dotenv/config";
-import { MongoClient, ServerApiVersion } from "mongodb";
 
 import getNow from "../utils/getNow.js";
 import customLogsInfo from "./logging.js";
+import client from "../config/mongoDBConnect.js";
+import backupAccountData from "../utils/backupAccountData.js";
 
 import twentyOne from "../mock/2021.json" assert { type: "json" };
 import twentyTwo from "../mock/2022.json" assert { type: "json" };
 import twentyThree from "../mock/2023.json" assert { type: "json" };
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(process.env.MONGODB_URL, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
 
 async function run() {
   try {
@@ -32,8 +24,9 @@ async function run() {
 
     const nowString = getNow();
 
+    const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
-    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree];
+    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
 
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo(`FinalData.length: ${finalData.length}`);
