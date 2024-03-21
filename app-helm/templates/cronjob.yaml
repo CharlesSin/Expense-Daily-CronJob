@@ -31,6 +31,5 @@ spec:
             image: {{ .Values.job.image.repository | default "nginx:latest" }}
             imagePullPolicy: {{ .Values.job.image.imagePullPolicy | default "Always" }}
           restartPolicy:  {{ .Values.job.restartPolicy | default "Never" }} 
-          serviceAccount: {{ .Values.serviceAccountName }}
           serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}

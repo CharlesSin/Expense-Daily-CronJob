@@ -27,5 +27,4 @@ spec:
                 cpu: "50m"
                 memory: "50Mi"
           restartPolicy: Never
-          serviceAccount: logging-ksa
           serviceAccountName: logging-ksa
