@@ -1,4 +1,4 @@
-import fireConfig from "../config/firebaseConnect.config";
+import fireConfig from "../config/firebaseConnect.config.js";
 
 // Backup data from firebase.
 async function backupAccountData(collectionName) {
