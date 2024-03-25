@@ -42,5 +42,7 @@ if [ "$BUILDENV" != "local" ]; then
     echo "\n更新 Docker Image"
     kubectl set image cronjob/daily-backup-cronjob cronjob-test=eugeneyiew128/daily-backup-cronjob:"$BUILDENV"_"$VERSION"
 
+    helm upgrade --install --create-namespace daily-backup app-helm --namespace test-cronjob --reuse-values -f app-helm/values.yaml --set job.image.repository=eugeneyiew128/daily-backup-cronjob:"$BUILDENV"_"$VERSION" --atomic
+
     echo "\nAll Done!!"
 fi

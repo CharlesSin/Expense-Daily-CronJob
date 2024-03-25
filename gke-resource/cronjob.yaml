@@ -4,7 +4,7 @@ metadata:
   name: daily-backup-cronjob
   namespace: gke-test-f2e
 spec:
-  schedule: "*/30 * * * *" # run every 30 minute
+  schedule: "* * * * *" # run every 30 minute
   concurrencyPolicy: Allow
   startingDeadlineSeconds: 100
   suspend: false
@@ -17,8 +17,21 @@ spec:
         spec:
           containers:
           - name: cronjob-test
-            image: eugeneyiew128/daily-backup-cronjob:dev_2024031912
+            image: eugeneyiew128/daily-backup-cronjob:dev_2024032509
             imagePullPolicy: Always
+            envFrom:
+            - secretRef:
+                name: timezone-secret
+            env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: timezone-config
+                  key: TZ
+            volumeMounts:
+              - name: config
+                mountPath: "/config"
+                readOnly: true
             resources:
               limits: 
                 cpu: "150m"
@@ -28,3 +41,16 @@ spec:
                 memory: "150Mi"
           restartPolicy: Never
           serviceAccountName: logging-ksa
+          volumes:
+          # You set volumes at the Pod level, then mount them into containers inside that Pod
+          - name: config
+            configMap:
+              # Provide the name of the ConfigMap you want to mount.
+              name: timezone-config
+              # An array of keys from the ConfigMap to create as files
+              # items:
+              # - key: "game.properties"
+              #   path: "game.properties"
+              # - key: "user-interface.properties"
+              #   path: "user-interface.properties"
+  timeZone: Asia/Taipei

@@ -11,7 +11,7 @@ labels:
   repo: daily-backup
 
 # namespace 預設 default
-namespace: gke-test-f2e # service namespace
+namespace: test-cronjob # service namespace
 # serviceAccountName 預設 default
 serviceAccountName: logging-ksa
 # 服務的名稱(必填)
@@ -21,10 +21,9 @@ name: daily-backup # service name. ex: <部門>-<組別>-<服務名稱>-<服務�
 job:
   # first cron
   image:
-    repository: eugeneyiew128/daily-backup-cronjob:dev_2024032112
+    repository: eugeneyiew128/daily-backup-cronjob:dev_2024032220
     imagePullPolicy: Always
-  namespace: gke-test-f2e
-  schedule: "* * * * *"
+  schedule: "*/30 * * * *"
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
   concurrencyPolicy: Allow
@@ -38,4 +37,12 @@ configmap:
         設定檔內容寫這邊
 
 serviceAccount:
+  # Specifies whether a service account should be created
   create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "logging-ksa"
