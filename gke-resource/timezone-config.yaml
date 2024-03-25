@@ -5,3 +5,14 @@ metadata:
   namespace: gke-test-f2e
 data:
   TZ: "Asia/Taipei"  # Replace this with your desired timezone
+  REDIS_BROADCAST_DB: "0"
+  REDIS_TRACE_LOG_DB: "1"
+  REDIS_USER_MAPPING_DB: "2"
+  REDIS_CLICK_LOG_DB: "3"
+  REDIS_VISITED_DB: "4"
+  REDIS_REDIRECT_MAPPING_DB: "5"
+  REDIS_FPID_MAPPING_DB: "6"
+  REDIS_SITE_USER_MAPPING_DB: "7"
+  REDIS_REDIRECT_LOG_DB: "8"
+  REDIS_MAPPING_DB: "9"
+  REDIS_REDIRECT_ERROR_MSG_DB: "10"

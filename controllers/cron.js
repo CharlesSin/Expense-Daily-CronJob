@@ -54,6 +54,8 @@ async function run() {
     console.log(process.env.DAY_OF_WEEK);
     console.log("process.env.DATE_OF_MONTH: ");
     console.log(process.env.DATE_OF_MONTH);
+    console.log("process.env.DEV_REDIS_HOST: ");
+    console.log(process.env.DEV_REDIS_HOST);
 
     console.log("------------------ TIMEZONE AREA ------------------");
 
