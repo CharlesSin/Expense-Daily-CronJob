@@ -1,0 +1,37 @@
+# {{- if .Values.job -}}
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   {{- if .Values.labels }}
+#   labels:
+#     {{- include "labels" . | indent 4 }}
+#   {{- end }}
+#   # Cronjob name
+#   name: {{ .Values.name }}
+#   # namespace
+#   namespace: {{ .Values.namespace | default "default" }}
+# spec:
+#   schedule: {{ .Values.job.schedule | toYaml | default "* * * * *" }}
+#   concurrencyPolicy: {{ .Values.job.concurrencyPolicy | toYaml | default "Allow" }}
+#   suspend: false
+#   failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit | default 10 }}
+#   successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit | default 10 }}
+#   jobTemplate:
+#     spec:
+#       backoffLimit: 0
+#       template:
+#         metadata:
+#           {{- if .Values.labels }}
+#           labels:
+#             {{- include "labels" . | indent 12 }}
+#           {{- end }}
+#         spec:
+#           containers:
+#           - name: {{ .Values.name }}
+#             image: {{ .Values.job.image.repository | default "nginx:latest" }}
+#             imagePullPolicy: {{ .Values.job.image.imagePullPolicy | default "Always" }}
+#             resources:
+#               {{- include "resources" . | indent 14 }}
+#           restartPolicy:  {{ .Values.job.restartPolicy | default "Never" }}
+#           serviceAccountName: {{ .Values.serviceAccountName }}
+# {{- end }}

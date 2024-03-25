@@ -1,4 +1,4 @@
-{{- if .Values.job -}}
+{{- if .Values.job }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -12,13 +12,18 @@ metadata:
   namespace: {{ .Values.namespace | default "default" }}
 spec:
   schedule: {{ .Values.job.schedule | toYaml | default "* * * * *" }}
-  concurrencyPolicy: {{ .Values.job.concurrencyPolicy | toYaml | default "Allow" }}
+  concurrencyPolicy: Allow
   suspend: false
   failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit | default 10 }}
   successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit | default 10 }}
+  selector:
+    matchLabels:
+      {{- if .Values.labels }}
+      # deployment 與 pod 相認的 labels
+      {{- include "labels" . | indent 6 }}
+      {{- end }}
   jobTemplate:
     spec:
-      backoffLimit: 0
       template:
         metadata:
           {{- if .Values.labels }}
@@ -30,8 +35,7 @@ spec:
           - name: {{ .Values.name }}
             image: {{ .Values.job.image.repository | default "nginx:latest" }}
             imagePullPolicy: {{ .Values.job.image.imagePullPolicy | default "Always" }}
-          restartPolicy:  {{ .Values.job.restartPolicy | default "Never" }}
-          resources:
-            {{- include "resources" . | indent 14 }}
-          serviceAccountName: {{ .Values.serviceAccountName }}
+            resources:
+              {{- include "resources" . | indent 14 }}
+          restartPolicy: OnFailure 
 {{- end }}

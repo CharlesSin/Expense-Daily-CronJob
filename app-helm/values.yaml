@@ -4,11 +4,11 @@
 # product => 服務名稱(必填)，例如: bbchat schedule
 # repo => 部屬服務的 repo 名稱(必填)，例如: imctl_api, imctl_web
 labels:
-  env: dev
-  type: cronjob
-  dept: personal
+  env: qa
+  type: cronjob2
+  dept: personaltest
   product: schedule
-  repo: daily-backup
+  repo: daily-backup2
 
 # namespace 預設 default
 namespace: test-cronjob # service namespace
@@ -28,6 +28,15 @@ job:
   successfulJobsHistoryLimit: 3
   concurrencyPolicy: Allow
   restartPolicy: Never
+
+# container 的資源設置
+resources:
+  limits:
+    cpu: "50m"
+    memory: "50Mi"
+  requests:
+    cpu: "50m"
+    memory: "50Mi"
 
 # secrets，下面有範例
 secrets:
@@ -64,11 +73,11 @@ configmap:
   - name: configmap-name
     namespace: test-cronjob
     labels:
-      env: dev
-      type: cronjob
-      dept: personal
+      env: qa
+      type: cronjob2
+      dept: personaltest
       product: schedule
-      repo: daily-backup
+      repo: daily-backup2
     data:
       TZ: "Asia/Taipei"
       REDIS_BROADCAST_DB: "0"
