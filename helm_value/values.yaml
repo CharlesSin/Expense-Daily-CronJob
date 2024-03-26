@@ -29,6 +29,25 @@ job:
   concurrencyPolicy: Allow
   restartPolicy: Never
 
+envs:
+  ref:
+    configMapRefName: timezone-config # ConfigMap Ref
+    secretRefName: timezone-secret # Secret Ref
+  secretFrom: # Secret value from
+    envName: TZ
+    configMapKeyRefName: timezone-config
+    configMapKeyRefKey: TZ
+  volumes: 
+    name: config
+    configMap:
+      name: timezone-config
+      itemsKey: TZ
+      itemsPath: TZ
+  volumeMounts:
+    name: config
+    mountPath: "/config"  # Mount path to access the ConfigMap data. # Python maybe is app/config
+    readOnly: true
+
 # container 的資源設置
 resources:
   limits:
@@ -70,7 +89,7 @@ serviceAccount:
 
 # configmap list，下面有範例
 configmap:
-  - name: configmap-name
+  - name: timezone-config
     namespace: test-cronjob
     labels:
       env: qa

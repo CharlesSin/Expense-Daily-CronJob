@@ -199,43 +199,47 @@ failureThreshold: {{ .readinessProbe.failureThreshold | default 3 }}
 {{- end }}
 
 {{/*----------- configmap -----------*/}}
-{{- define "configmap" }}
-{{- with .Values.deployment.container.envs }}
-{{- if .ref }}
+{{- define "configmapRef" }}
+{{- if .Values.envs.ref.configMapRefName }}
 - configMapRef:
-    name: {{ .ref.configMapRefName }}
-- secretRef:
-    name: {{ .ref.secretRefName }}
+    name: {{ .Values.envs.ref.configMapRefName }}
 {{- end }}
+{{- end }}
+
+{{- define "secretRef" }}
+{{- if .Values.envs.ref.secretRefName }}
+- secretRef:
+    name: {{ .Values.envs.ref.secretRefName }}
 {{- end }}
 {{- end }}
 
 {{/*----------- secret -----------*/}}
 {{- define "secret" }}
-{{- with .Values.deployment.container.envs }}
-{{- if .secretFrom }}
-- name: {{ .secretFrom.envName }}
+{{- if .Values.envs.secretFrom }}
+- name: {{ .Values.envs.secretFrom.envName }}
   valueFrom:
-    secretKeyRef:
-      name: {{ .secretFrom.secretKeyRefName }}
-      key: {{ .secretFrom.secretKeyRefKey }}
-{{- end }}
+    configMapKeyRef:
+      name: {{ .Values.envs.secretFrom.configMapKeyRefName }}
+      key: {{ .Values.envs.secretFrom.configMapKeyRefKey }}
+  # valueFrom:
+  #   configMapKeyRef:
+  #     name: {{ .configMapKeyRefName }}
+  #     key: {{ .configMapKeyRefKey }}
 {{- end }}
 {{- end }}
 
 {{/*----------- volumeMounts -----------*/}}
 {{- define "volumeMounts" }}
-{{- with .Values.deployment.container }}
-{{- if .volumeMounts }}
-- name: {{ .volumeMounts.name }}
-  mountPath: {{ .volumeMounts.mountPath }}
-{{- end }}
+{{- if .Values.envs.volumeMounts }}
+- name: {{ .Values.envs.volumeMounts.name }}
+  mountPath: {{ .Values.envs.volumeMounts.mountPath }}
+  readOnly: true
 {{- end }}
 {{- end }}
 
 {{/*----------- volumes -----------*/}}
 {{- define "volumes" }}
-{{- with .Values.deployment.container.volumes }}
+{{- with .Values.envs.volumes }}
 - name: {{ .name }}
   {{- if .configMap }}
   configMap:

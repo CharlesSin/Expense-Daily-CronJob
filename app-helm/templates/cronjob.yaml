@@ -16,12 +16,6 @@ spec:
   suspend: false
   failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit | default 10 }}
   successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit | default 10 }}
-  selector:
-    matchLabels:
-      {{- if .Values.labels }}
-      # deployment 與 pod 相認的 labels
-      {{- include "labels" . | indent 6 }}
-      {{- end }}
   jobTemplate:
     spec:
       template:
@@ -37,5 +31,32 @@ spec:
             imagePullPolicy: {{ .Values.job.image.imagePullPolicy | default "Always" }}
             resources:
               {{- include "resources" . | indent 14 }}
+
+            # DONE
+            {{- if .Values.envs.ref }}
+            envFrom:
+            {{- if .Values.envs.ref.configMapRefName }}
+              {{- include "configmapRef" . | indent 14 }}
+            {{- end }}
+            {{- if .Values.envs.ref.secretRefName }}
+              {{- include "secretRef" . | indent 14 }}
+            {{- end }}
+            {{- end }}
+
+            {{- if .Values.envs.secretFrom }}
+            env:
+              {{- include "secret" . | indent 14 }}
+            {{- end }}
+
+            {{- if .Values.envs.volumeMounts }}
+            volumeMounts:
+              {{- include "volumeMounts" . | indent 14 }}
+            {{- end }}
+
+          {{- if .Values.envs.volumes }}
+          volumes:
+            {{- include "volumes" . | indent 10 }}
+          {{- end }}
+
           restartPolicy: OnFailure 
 {{- end }}

@@ -61,7 +61,7 @@ async function run() {
     console.log("------------------ TIMEZONE AREA ------------------");
 
     const insertData = await collection.insertMany(finalData);
-    customLogsInfo(`insertData: ${JSON.stringify(insertData)}`);
+    console.log(JSON.stringify(insertData));
     setTimeout(() => {
       console.log("waiting for 100001ms");
     }, 100001);

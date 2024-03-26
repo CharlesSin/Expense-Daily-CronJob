@@ -4,7 +4,7 @@ metadata:
   name: daily-backup-cronjob
   namespace: gke-test-f2e
 spec:
-  schedule: "*/30 * * * *" # run every 30 minute
+  schedule: "*/3 * * * *" # run every 30 minute
   concurrencyPolicy: Allow
   startingDeadlineSeconds: 100
   suspend: false
@@ -19,7 +19,11 @@ spec:
           - name: cronjob-test
             image: eugeneyiew128/daily-backup-cronjob:dev_2024032509
             imagePullPolicy: Always
+
+# wait fix this area bug start
             envFrom:
+            - configMapRef:
+                name: timezone-config
             - secretRef:
                 name: timezone-secret
             env:
@@ -32,6 +36,8 @@ spec:
               - name: config
                 mountPath: "/config"
                 readOnly: true
+# wait fix this area bug end
+
             resources:
               limits: 
                 cpu: "150m"
