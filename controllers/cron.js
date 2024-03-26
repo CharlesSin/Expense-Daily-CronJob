@@ -20,7 +20,7 @@ async function run() {
     customLogsInfo("Pinged your deployment. You successfully connected to MongoDB!");
 
     // Database Name
-    const dbName = "DailyBackup";
+    const dbName = "VercelDailyBackup";
     const db = client.db(dbName);
     const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
