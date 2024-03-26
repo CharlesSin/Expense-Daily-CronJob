@@ -23,7 +23,7 @@ job:
   image:
     repository: eugeneyiew128/daily-backup-cronjob:dev_2024032220
     imagePullPolicy: Always
-  schedule: "* * * * *"
+  schedule: "*/30 * * * *"
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
   concurrencyPolicy: Allow
