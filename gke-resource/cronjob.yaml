@@ -4,7 +4,7 @@ metadata:
   name: daily-backup-cronjob
   namespace: gke-test-f2e
 spec:
-  schedule: "*/3 * * * *" # run every 30 minute
+  schedule: "*/30 * * * *" # run every 30 minute
   concurrencyPolicy: Allow
   startingDeadlineSeconds: 100
   suspend: false
