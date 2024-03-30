@@ -12,9 +12,7 @@ import twentyThree from "../mock/2023.json" assert { type: "json" };
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo("Pinged your deployment. You successfully connected to MongoDB!");
@@ -22,19 +20,18 @@ async function run() {
     // Database Name
     const dbName = "DailyBackup";
     const db = client.db(dbName);
-    // const randomNumber = `${Math.random() * 100000}`;
+    const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
 
-    // const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
+    const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
-    // const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
-    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree];
+    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
 
-    // const firestoreDb = fireConfig.firestore();
-    // await firestoreDb
-    //   .collection("demo")
-    //   .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
-    //   .set({ DATE: nowString, TOTAL: finalData.length });
+    const firestoreDb = fireConfig.firestore();
+    await firestoreDb
+      .collection("demo")
+      .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
+      .set({ DATE: nowString, TOTAL: finalData.length });
 
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo(`FinalData.length: ${finalData.length}`);
@@ -62,11 +59,11 @@ async function run() {
     
     console.log("------------------ TIMEZONE AREA ------------------");
 
-    // const insertData = await collection.insertMany(finalData);
-    // console.log(JSON.stringify(insertData));
-    // setTimeout(() => {
-    //   console.log("waiting for 100001ms");
-    // }, 100001);
+    const insertData = await collection.insertMany(finalData);
+    console.log(JSON.stringify(insertData));
+    setTimeout(() => {
+      console.log("waiting for 100001ms");
+    }, 100001);
   } finally {
     // Ensures that the client will close when you finish/error
     customLogsInfo(`Client close connection: ${getNow()}`);
