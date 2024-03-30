@@ -1,6 +1,5 @@
 stages:
   - lint
-  - format
   - unit-test
   - coverage
   - build
@@ -13,14 +12,6 @@ lint:
     - gitlab-org-docker
   script:
     - echo "lint"
-
-format:
-  stage: "format"
-  tags:
-    - gitlab-org-docker
-  script:
-    - yarn
-    - yarn format
 
 # 單元測試
 unit-test:
