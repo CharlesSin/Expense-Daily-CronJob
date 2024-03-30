@@ -22,19 +22,19 @@ async function run() {
     // Database Name
     const dbName = "DailyBackup";
     const db = client.db(dbName);
-    const randomNumber = `${Math.random() * 100000}`;
+    // const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
 
-    const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
+    // const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
     // const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
     const finalData = [...twentyOne, ...twentyTwo, ...twentyThree];
 
-    const firestoreDb = fireConfig.firestore();
-    await firestoreDb
-      .collection("demo")
-      .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
-      .set({ DATE: nowString, TOTAL: arraydata.length });
+    // const firestoreDb = fireConfig.firestore();
+    // await firestoreDb
+    //   .collection("demo")
+    //   .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
+    //   .set({ DATE: nowString, TOTAL: finalData.length });
 
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo(`FinalData.length: ${finalData.length}`);
@@ -48,23 +48,25 @@ async function run() {
 
     // Bonus: You can also put Date object to first arg
     convertTZ(date, "Asia/Taipei"); // current date-time in jakarta.
-    console.log("process.env.TZ: ");
-    console.log(process.env.TZ);
+    console.log("From ConfigMap");
+    console.log("process.env.FIRST_TZ: ");
+    console.log(process.env.FIRST_TZ);
+    console.log("process.env.SECOND_TZ: ");
+    console.log(process.env.SECOND_TZ);
+
+    console.log("From Secret");
     console.log("process.env.DAY_OF_WEEK: ");
     console.log(process.env.DAY_OF_WEEK);
     console.log("process.env.DATE_OF_MONTH: ");
     console.log(process.env.DATE_OF_MONTH);
-
-    console.log("process.env.DEV_REDIS_HOST: ");
-    console.log(process.env.DEV_REDIS_HOST);
-
+    
     console.log("------------------ TIMEZONE AREA ------------------");
 
-    const insertData = await collection.insertMany(finalData);
-    console.log(JSON.stringify(insertData));
-    setTimeout(() => {
-      console.log("waiting for 100001ms");
-    }, 100001);
+    // const insertData = await collection.insertMany(finalData);
+    // console.log(JSON.stringify(insertData));
+    // setTimeout(() => {
+    //   console.log("waiting for 100001ms");
+    // }, 100001);
   } finally {
     // Ensures that the client will close when you finish/error
     customLogsInfo(`Client close connection: ${getNow()}`);

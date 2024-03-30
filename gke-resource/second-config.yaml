@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: second-config
+  namespace: default
+data:
+  SECOND_TZ: "SECOND_TZ Asia/Taipei"  # Replace this with your desired timezone

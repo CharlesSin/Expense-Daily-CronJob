@@ -6,7 +6,6 @@
 
 **/.classpath
 **/.dockerignore
-**/.env
 **/.git
 **/.gitignore
 **/.project
@@ -32,3 +31,6 @@
 **/dist
 LICENSE
 README.md
+
+**/.env
+**/.txt

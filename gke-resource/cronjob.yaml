@@ -2,9 +2,9 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: daily-backup-cronjob
-  namespace: gke-test-f2e
+  namespace: default
 spec:
-  schedule: "*/3 * * * *" # run every 30 minute
+  schedule: "*/30 18 * * *" # run every 30 minute
   concurrencyPolicy: Allow
   startingDeadlineSeconds: 100
   suspend: false
@@ -17,42 +17,45 @@ spec:
         spec:
           containers:
           - name: cronjob-test
-            image: eugeneyiew128/daily-backup-cronjob:dev_2024032509
+            image: charlessin1993/daily-backup-cronjob:dev_2024033002
             imagePullPolicy: Always
-
-# wait fix this area bug start
             envFrom:
             - configMapRef:
                 name: timezone-config
+            - configMapRef:
+                name: second-config
             - secretRef:
                 name: timezone-secret
             env:
-            - name: TZ
+            - name: FIRST_TZ
               valueFrom:
                 configMapKeyRef:
                   name: timezone-config
-                  key: TZ
-            volumeMounts:
-              - name: config
-                mountPath: "/config"
-                readOnly: true
-# wait fix this area bug end
-
+                  key: FIRST_TZ
+            - name: SECOND_TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: second-config
+                  key: SECOND_TZ
+            # volumeMounts:
+            #   - name: config
+            #     mountPath: "/config"
+            #     readOnly: true
             resources:
               limits: 
-                cpu: "150m"
+                cpu: "50m"
                 memory: "150Mi"
               requests: 
-                cpu: "150m"
+                cpu: "50m"
                 memory: "150Mi"
           restartPolicy: Never
-          serviceAccountName: logging-ksa
-          volumes:
-          # You set volumes at the Pod level, then mount them into containers inside that Pod
-          - name: config
-            configMap:
-              # Provide the name of the ConfigMap you want to mount.
-              name: timezone-config
+          # serviceAccountName: logging-ksa
+          # volumes:
+          # # You set volumes at the Pod level, then mount them into containers inside that Pod
+          # - name: config
+          #   configMap:
+          #     # Provide the name of the ConfigMap you want to mount.
+          #     name: timezone-config
               # An array of keys from the ConfigMap to create as files
               # items:
               # - key: "game.properties"
