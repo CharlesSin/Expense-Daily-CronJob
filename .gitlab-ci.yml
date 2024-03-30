@@ -1,0 +1,55 @@
+stages:
+  - lint
+  - format
+  - unit-test
+  - coverage
+  - build
+
+image: node:21-alpine
+
+lint:
+  stage: "lint"
+  tags:
+    - gitlab-org-docker
+  script:
+    - echo "lint"
+
+format:
+  stage: "format"
+  tags:
+    - gitlab-org-docker
+  script:
+    - yarn
+    - yarn format
+
+# 單元測試
+unit-test:
+  stage: "unit-test"
+  tags:
+    - gitlab-org-docker
+  script: # 填寫：需要執行的指令
+    - echo "unit-test"
+
+# 單元測試覆蓋率
+code-coverage:
+  stage: "code-coverage"
+  tags:
+    - gitlab-org-docker
+  script: # 填寫：需要執行的指令
+    - echo "code-coverage"
+  artifacts:
+    paths:
+      - coverage/* # Path to your coverage reports
+    expire_in: 1 week
+  coverage: '/All files\s+\|\s+\d+\.\d+/'
+
+# 打包專案
+build:
+  stage: "build"
+  tags:
+    - gitlab-org-docker
+  script: # 填寫：需要執行的指令
+    - cp $ENV_FILE .env
+    - cp $DOCKER_TOKEN DOCKER_HUB_TOKEN.txt
+    - chmod +x build.sh
+    - sh build.sh '$CI_COMMIT_BRANCH' $CI_COMMIT_SHORT_SHA

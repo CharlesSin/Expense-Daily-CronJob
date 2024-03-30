@@ -6,8 +6,6 @@ BUILDENV=$1
 #版本號碼 [讀取第二個參數]
 VERSION=$2
 
-TOKEN=$3
-
 if [ -z "$BUILDENV" ]; then
     echo "用法: sh build.sh [Arg1] [Arg2]"
     echo "Arg1: Build版環境(local/dev/demo/prod)"
@@ -37,15 +35,15 @@ if [ "$BUILDENV" != "local" ]; then
     docker push charlessin1993/daily-backup-cronjob:"$BUILDENV"_"$VERSION"
 
     # 部署
-    echo "\n部署到 GKE 上"
-    kubectl apply -f gke-resource/timezone-config.yaml
-    kubectl apply -f gke-resource/second-config.yaml
-    kubectl apply -f gke-resource/secret.yaml
-    kubectl apply -f gke-resource/cronjob.yaml
+    # echo "\n部署到 GKE 上"
+    # kubectl apply -f gke-resource/timezone-config.yaml
+    # kubectl apply -f gke-resource/second-config.yaml
+    # kubectl apply -f gke-resource/secret.yaml
+    # kubectl apply -f gke-resource/cronjob.yaml
 
     # 更新
-    echo "\n更新 Docker Image"
-    kubectl set image cronjob/daily-backup-cronjob cronjob-test=charlessin1993/daily-backup-cronjob:"$BUILDENV"_"$VERSION" --namespace=default
+    # echo "\n更新 Docker Image"
+    # kubectl set image cronjob/daily-backup-cronjob cronjob-test=charlessin1993/daily-backup-cronjob:"$BUILDENV"_"$VERSION" --namespace=default
 
     # helm upgrade --install --create-namespace daily-backup app-helm --namespace test-cronjob --reuse-values -f helm_value/values.yaml --set job.image.repository=eugeneyiew128/daily-backup-cronjob:"$BUILDENV"_"$VERSION" --atomic
 
