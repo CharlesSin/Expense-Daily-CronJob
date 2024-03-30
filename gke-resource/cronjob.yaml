@@ -4,7 +4,7 @@ metadata:
   name: daily-backup-cronjob
   namespace: default
 spec:
-  schedule: "* 20 * * *" # run every 30 minute
+  schedule: "0 21 * * *" # run every 30 minute
   concurrencyPolicy: Allow
   startingDeadlineSeconds: 100
   suspend: false

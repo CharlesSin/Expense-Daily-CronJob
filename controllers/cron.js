@@ -23,7 +23,7 @@ async function run() {
     const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
 
-    const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
+    const thisYearData = await backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
     const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
 
