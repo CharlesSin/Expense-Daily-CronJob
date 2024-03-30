@@ -20,25 +20,51 @@ async function run() {
     customLogsInfo("Pinged your deployment. You successfully connected to MongoDB!");
 
     // Database Name
-    const dbName = "VercelDailyBackup";
+    const dbName = "DailyBackup";
     const db = client.db(dbName);
     const randomNumber = `${Math.random() * 100000}`;
     const nowString = getNow();
 
-    const thisYearData = await backupAccountData(`Account${new Date().getFullYear()}`);
+    const thisYearData = backupAccountData(`Account${new Date().getFullYear()}`);
     const collection = db.collection(nowString);
-    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
+    // const finalData = [...twentyOne, ...twentyTwo, ...twentyThree, ...thisYearData];
+    const finalData = [...twentyOne, ...twentyTwo, ...twentyThree];
 
     const firestoreDb = fireConfig.firestore();
     await firestoreDb
       .collection("demo")
       .doc(`${nowString}_${Number.parseFloat(randomNumber).toFixed()}`)
-      .set({ DATE: nowString, TOTAL: finalData.length });
+      .set({ DATE: nowString, TOTAL: arraydata.length });
 
     customLogsInfo(`Time: ${getNow()}`);
     customLogsInfo(`FinalData.length: ${finalData.length}`);
 
-    await collection.insertMany(finalData);
+    const date = new Date();
+    console.log("------------------ TIMEZONE AREA ------------------");
+    console.log(`date.toString(): ${date.toString()}`);
+    function convertTZ(date, tzString) {
+      return new Date((typeof date === "string" ? new Date(date) : date).toLocaleString("en-US", { timeZone: tzString }));
+    }
+
+    // Bonus: You can also put Date object to first arg
+    convertTZ(date, "Asia/Taipei"); // current date-time in jakarta.
+    console.log("process.env.TZ: ");
+    console.log(process.env.TZ);
+    console.log("process.env.DAY_OF_WEEK: ");
+    console.log(process.env.DAY_OF_WEEK);
+    console.log("process.env.DATE_OF_MONTH: ");
+    console.log(process.env.DATE_OF_MONTH);
+
+    console.log("process.env.DEV_REDIS_HOST: ");
+    console.log(process.env.DEV_REDIS_HOST);
+
+    console.log("------------------ TIMEZONE AREA ------------------");
+
+    const insertData = await collection.insertMany(finalData);
+    console.log(JSON.stringify(insertData));
+    setTimeout(() => {
+      console.log("waiting for 100001ms");
+    }, 100001);
   } finally {
     // Ensures that the client will close when you finish/error
     customLogsInfo(`Client close connection: ${getNow()}`);

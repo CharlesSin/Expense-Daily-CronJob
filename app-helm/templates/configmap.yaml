@@ -1,15 +1,29 @@
 {{- if .Values.configmap }}
 {{- range .Values.configmap }}
 {{- $name := .name }}
+{{- $namespace := .namespace }}
+{{- $labels := .labels }}
 {{- $data := .data }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ $name }}
-  namespace: {{ $.Values.namespace | default "default" }}
+  namespace: {{ $namespace | default "default" }}
+  labels:
+  {{- with $labels }}
+    env: {{ .env }}
+    type: {{ .type }}
+    dept: {{ .dept }}
+    product: {{ .product }}
+    repo: {{ .repo }}
+    {{- if .tag }}
+    tag: {{ .tag }}
+    {{- end }}
+  {{- end }}
 data:
-  {{- tpl (toYaml $data) $ | nindent 2 }}
-
----
+  {{- range $key, $value := $data }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  # {{ $data }}
 {{- end }}
 {{- end }}

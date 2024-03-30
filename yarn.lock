@@ -108,16 +108,6 @@
     retry-request "^7.0.0"
     teeny-request "^9.0.0"
 
-"@google-cloud/firestore@^7.1.0":
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/@google-cloud/firestore/-/firestore-7.5.0.tgz#386f8141c5a83410c70a8c0710310bbcc983e2f2"
-  integrity sha512-bhFKaCybfK/jzqhVm1Y1o8p3wOHVEo8opj7IJGF2sdqS69xl6QD1zpnrgssi/4HUj9bxIqtcs33Ofz//deV+rg==
-  dependencies:
-    fast-deep-equal "^3.1.1"
-    functional-red-black-tree "^1.0.1"
-    google-gax "^4.0.4"
-    protobufjs "^7.2.5"
-
 "@google-cloud/logging-winston@^6.0.0":
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/@google-cloud/logging-winston/-/logging-winston-6.0.0.tgz#ef7ed3af9669297fa8df8ff4aeffe143f8bfe85c"

@@ -1,4 +1,4 @@
-{{- if .Values.job -}}
+{{- if .Values.job }}
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -12,13 +12,12 @@ metadata:
   namespace: {{ .Values.namespace | default "default" }}
 spec:
   schedule: {{ .Values.job.schedule | toYaml | default "* * * * *" }}
-  concurrencyPolicy: {{ .Values.job.concurrencyPolicy | toYaml | default "Allow" }}
+  concurrencyPolicy: Allow
   suspend: false
   failedJobsHistoryLimit: {{ .Values.job.failedJobsHistoryLimit | default 10 }}
   successfulJobsHistoryLimit: {{ .Values.job.successfulJobsHistoryLimit | default 10 }}
   jobTemplate:
     spec:
-      backoffLimit: 0
       template:
         metadata:
           {{- if .Values.labels }}
@@ -30,6 +29,34 @@ spec:
           - name: {{ .Values.name }}
             image: {{ .Values.job.image.repository | default "nginx:latest" }}
             imagePullPolicy: {{ .Values.job.image.imagePullPolicy | default "Always" }}
-          restartPolicy:  {{ .Values.job.restartPolicy | default "Never" }} 
-          serviceAccountName: {{ .Values.serviceAccountName }}
+            resources:
+              {{- include "resources" . | indent 14 }}
+
+            # DONE
+            {{- if .Values.envs.ref }}
+            envFrom:
+            {{- if .Values.envs.ref.configMapRefName }}
+              {{- include "configmapRef" . | indent 14 }}
+            {{- end }}
+            {{- if .Values.envs.ref.secretRefName }}
+              {{- include "secretRef" . | indent 14 }}
+            {{- end }}
+            {{- end }}
+
+            {{- if .Values.envs.secretFrom }}
+            env:
+              {{- include "secret" . | indent 14 }}
+            {{- end }}
+
+            {{- if .Values.envs.volumeMounts }}
+            volumeMounts:
+              {{- include "volumeMounts" . | indent 14 }}
+            {{- end }}
+
+          {{- if .Values.envs.volumes }}
+          volumes:
+            {{- include "volumes" . | indent 10 }}
+          {{- end }}
+
+          restartPolicy: OnFailure 
 {{- end }}

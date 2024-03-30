@@ -23,7 +23,7 @@ job:
   image:
     repository: eugeneyiew128/daily-backup-cronjob:dev_2024032220
     imagePullPolicy: Always
-  schedule: "*/3 * * * *"
+  schedule: "*/30 * * * *"
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
   concurrencyPolicy: Allow
@@ -37,16 +37,16 @@ envs:
     envName: TZ
     configMapKeyRefName: timezone-config
     configMapKeyRefKey: TZ
-  # volumes: 
-  #   name: config
-  #   configMap:
-  #     name: timezone-config
-  #     itemsKey: TZ
-  #     itemsPath: TZ
-  # volumeMounts:
-  #   name: config
-  #   mountPath: /config  # Mount path to access the ConfigMap data. # Python maybe is app/config
-  #   readOnly: true
+  volumes: 
+    name: config
+    configMap:
+      name: timezone-config
+      itemsKey: TZ
+      itemsPath: TZ
+  volumeMounts:
+    name: config
+    mountPath: "/config"  # Mount path to access the ConfigMap data. # Python maybe is app/config
+    readOnly: true
 
 # container 的資源設置
 resources:
